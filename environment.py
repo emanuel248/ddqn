@@ -17,8 +17,10 @@ class QEnvironment:
         self.profits = 0
         self.positions = []
         self.position_value = 0
+        self.position_value_abs = 0
         self.history = [0 for _ in range(self.history_t)]
         self.balance = 1000.0
+        self.transaction_idx = self.transaction_idx + 1
 
         return [self.position_value, self.balance] + self.history # obs
     
@@ -75,8 +77,10 @@ class QEnvironment:
         # set next time
         self.t += 1
         self.position_value = 0
+        self.position_value_abs = 0
         for p in self.positions:
             self.position_value += (self.data.iloc[self.t, :]['Close'] - p)
+            self.position_value_abs += self.data.iloc[self.t, :]['Close']
         self.history.pop(0)
         self.history.append(self.data.iloc[self.t, :]['Close'] - self.data.iloc[(self.t-1), :]['Close'])
         
