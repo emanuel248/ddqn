@@ -62,7 +62,9 @@ class QEnvironment:
                 
                 # reward clipping -1<r<1
                 if profits > 0:
-                    reward /= len(self.positions)
+                    # slows down learning a lot, maybe try later with longer training
+                    #reward /= len(self.positions)
+                    reward = 1
                 else:
                     reward = -1
                 self.positions = []

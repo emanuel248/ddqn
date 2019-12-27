@@ -3,7 +3,7 @@ import torch.nn.functional as F
 
 class Q_Net(nn.Module):
 
-    def __init__(self, input_size, hidden_size, output_size, droprate=0.2):
+    def __init__(self, input_size, hidden_size, output_size, drop_rate=0.2):
         super(Q_Net, self).__init__()
 
         self.output_size = output_size
