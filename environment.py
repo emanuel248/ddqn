@@ -54,16 +54,18 @@ class QEnvironment:
                 for p in self.positions:
                     profits += (self.data.iloc[self.t, :]['Close'] - p)
                     self.balance += self.data.iloc[self.t, :]['Close']
+                    reward += float((self.data.iloc[self.t, :]['Close'] - p)>0)
                 #print(self.balance, profits)
                 self.transaction_idx = self.transaction_idx + 1
 
                 self.profits += profits
-                self.positions = []
+                
                 # reward clipping -1<r<1
                 if profits > 0:
-                    reward = 1
+                    reward /= len(self.positions)
                 else:
                     reward = -1
+                self.positions = []
                 self.log.write(f"{self.transaction_idx},SELL,{self.data.iloc[self.t, :]['Date']},{self.data.iloc[self.t, :]['Close']},{reward},{self.balance}\n")
         
         #debug
