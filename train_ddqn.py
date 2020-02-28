@@ -18,6 +18,9 @@ from utils import load_data
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--data', type=str, default='tsla.us.txt', help='*.csv file path')
+    parser.add_argument('--epochs', type=int, default=100, help='number of epochs')
+    parser.add_argument('--showplot', type=bool, default=False, help='plot training stats')
+    parser.add_argument('--outdir', type=str, default='saved', help='model save dir')
     parser.add_argument('--weights', type=str, help='*.weights file path')
     opt = parser.parse_args()
     """
@@ -42,11 +45,11 @@ if __name__ == "__main__":
     optimizer = optim.Adam(Q.parameters(), lr=0.3e-4)
     lr_schedule = optim.lr_scheduler.ReduceLROnPlateau(optimizer, factor=0.001, patience=25)
 
-    epoch_num = 500
+    epoch_num = opt.epochs
     step_max = env.len()
     print('env len', step_max)
-    memory_size = 3000 #200 works
-    batch_size = 50 #100 works
+    memory_size = 30000 #200 works
+    batch_size = 1000 #100 works
     epsilon = 1.0
     epsilon_decrease = -0.001
     epsilon_min = 0.1
@@ -159,7 +162,7 @@ if __name__ == "__main__":
                 writer.add_scalar('Reward', log_reward, epoch+1)
 
                 desc.set_description(' | '.join(map(str, [epoch+1, f'eps {epsilon:.6f}, step {total_step}', f'reward {log_reward:.6f}', f'loss {log_loss:.6f}', f'value {env.balance:.3f}'])))
-            if (epoch+1) % show_plot_freq == 0:
+            if (epoch+1) % show_plot_freq == 0 and opt.showplot:
                 plt.figure(figsize=(15,8))
                 plt.subplot(3,1,1)
                 sns.lineplot(x=range(env.data_combined.shape[0]), y=env.data_combined[:,5], label="long", linewidth=0.8)
@@ -172,5 +175,5 @@ if __name__ == "__main__":
                 start = time.time()
                 plt.show()
                 #lr_schedule.step(log_loss) # worked without
-    torch.save(Q.state_dict(), f'model_{proj_name}.weights')
+    torch.save(Q.state_dict(), f'{opt.outdir}/model_{proj_name}.weights')
     writer.close()
