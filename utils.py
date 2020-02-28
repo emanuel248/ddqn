@@ -5,7 +5,7 @@ def load_data(filepath):
     data = pd.read_csv(filepath, skiprows=0)
     #data = pd.read_csv('tsla.us.txt')
     #data['Date'] = pd.to_datetime(data['Date'])
-    locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
+    #locale.setlocale(locale.LC_ALL, 'en_US.UTF-8')
     #data['Date'] = pd.to_datetime(data['Date'], format='%Y-%m-%d %I-%p', errors='coerce')
     data['Date'] = pd.to_datetime(data['Date'], format='%Y-%m-%d', errors='coerce')
     data = data.set_index('Date', drop=False)
