@@ -19,6 +19,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--data', type=str, default='tsla.us.txt', help='*.csv file path')
     parser.add_argument('--epochs', type=int, default=100, help='number of epochs')
+    parser.add_argument('--lr', type=float, default=3e-4, help='learning rate')
     parser.add_argument('--showplot', type=bool, default=False, help='plot training stats')
     parser.add_argument('--outdir', type=str, default='saved', help='model save dir')
     parser.add_argument('--weights', type=str, help='*.weights file path')
@@ -42,14 +43,14 @@ if __name__ == "__main__":
     Q.to(device)
     Q_target.to(device)
     
-    optimizer = optim.Adam(Q.parameters(), lr=0.3e-4)
+    optimizer = optim.Adam(Q.parameters(), lr=opt.lr)
     lr_schedule = optim.lr_scheduler.ReduceLROnPlateau(optimizer, factor=0.001, patience=25)
 
     epoch_num = opt.epochs
     step_max = env.len()
     print('env len', step_max)
-    memory_size = 30000 #200 works
-    batch_size = 1000 #100 works
+    memory_size = 300000 #200 works
+    batch_size = 10000 #100 works
     epsilon = 1.0
     epsilon_decrease = -0.001
     epsilon_min = 0.1

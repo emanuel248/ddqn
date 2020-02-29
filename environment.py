@@ -56,7 +56,7 @@ class QEnvironment:
                 self.balance += price - p['price']
 
             self.balance += profits
-            reward = 1.0 if profits != 0.0 else 0.0
+            reward = 1.0 if profits > 0.0 else -0.2
             
             self.positions = []
             self.data_combined[self.t, 3:] = np.array([SELL, self.balance, len(self.positions), len(self.short_positions)])
@@ -68,7 +68,7 @@ class QEnvironment:
             for p in self.short_positions:
                 agg_short += (p['price'] - price)
             self.balance += agg_short
-            reward = 1.0 if agg_short > 0.0 else 0.0
+            reward = 1.0 if agg_short > 0.0 else -0.2
 
             self.short_positions = []
             self.data_combined[self.t, 3:] = np.array([CLOSE, self.balance, len(self.positions), len(self.short_positions)])
